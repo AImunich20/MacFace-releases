@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MacFace — face unlock for your Mac</title>
+<meta name="description" content="MacFace unlocks your Mac with your face using the built-in camera. Everything runs on-device.">
+<link rel="icon" href="icon.png">
+<style>
+  :root {
+    --bg: #07080b; --bg2: #11141a; --ink: #f2f4f8; --muted: #9aa3b2; --line: rgba(255,255,255,.09);
+    --blue: #3499ff; --blue-soft: #7fc2ff; --card: rgba(255,255,255,.04); --warn: #ffb547;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; color: var(--ink); background: var(--bg);
+    font: 16px/1.55 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Sukhumvit Set", "Thonburi", "Helvetica Neue", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .glow { position: fixed; inset: -20% -10% auto; height: 80vh; pointer-events: none;
+    background: radial-gradient(closest-side, rgba(52,153,255,.18), transparent); }
+  main { position: relative; max-width: 980px; margin: 0 auto; padding: 0 16px 80px; }
+  nav { display: flex; align-items: center; justify-content: space-between; padding: 22px 0; }
+  .brand { display: flex; gap: 10px; align-items: center; font-weight: 700; letter-spacing: .2px; }
+  .brand img { width: 30px; height: 30px; border-radius: 7px; }
+  .lang { display: flex; gap: 4px; padding: 3px; border: 1px solid var(--line); border-radius: 99px; }
+  .lang button { border: 0; background: none; color: var(--muted); font: inherit; font-size: 13px;
+    padding: 4px 12px; border-radius: 99px; cursor: pointer; }
+  .lang button.on { background: linear-gradient(var(--blue-soft), var(--blue)); color: #03101f; font-weight: 600; }
+  header { text-align: center; padding: 64px 0 40px; }
+  header img { width: 148px; height: 148px; border-radius: 32px; filter: drop-shadow(0 20px 40px rgba(52,153,255,.25)); }
+  h1 { font-size: clamp(36px, 7vw, 64px); line-height: 1.05; margin: 22px 0 14px; letter-spacing: -1.5px; }
+  h1 span { background: linear-gradient(var(--blue-soft), var(--blue)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .lead { color: var(--muted); font-size: 19px; max-width: 600px; margin: 0 auto 32px; }
+  .cta { display: inline-flex; align-items: center; gap: 10px; padding: 15px 28px; border-radius: 99px;
+    background: linear-gradient(var(--blue-soft), var(--blue)); color: #03101f; font-weight: 700; text-decoration: none;
+    box-shadow: 0 10px 30px rgba(52,153,255,.35); transition: transform .15s, box-shadow .15s; }
+  .cta:hover { transform: translateY(-1px); box-shadow: 0 14px 36px rgba(52,153,255,.45); }
+  .small { color: var(--muted); font-size: 13px; margin-top: 14px; }
+  .small a { color: var(--muted); }
+  .warn { margin-top: 48px; border: 1px solid rgba(255,181,71,.35); background: rgba(255,181,71,.06);
+    border-radius: 22px; padding: 22px; }
+  .warn h3 { margin: 0 0 8px; color: var(--warn); font-size: 16px; }
+  .warn ul { margin: 0; padding-left: 20px; color: var(--muted); font-size: 14px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-top: 32px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 22px; padding: 22px; }
+  .card .icon { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center;
+    background: rgba(52,153,255,.12); color: var(--blue-soft); font-size: 19px; margin-bottom: 12px; }
+  .card h3 { margin: 0 0 6px; font-size: 16px; }
+  .card p { margin: 0; color: var(--muted); font-size: 14px; }
+  h2 { font-size: 28px; margin: 72px 0 18px; letter-spacing: -.5px; }
+  ol { color: var(--muted); padding-left: 22px; }
+  ol li { margin: 8px 0; }
+  ol b { color: var(--ink); }
+  footer { margin-top: 72px; padding-top: 24px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px;
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  footer a { color: var(--muted); }
+  [data-th] { display: none; }
+  html[lang="th"] [data-en] { display: none; }
+  html[lang="th"] [data-th] { display: revert; }
+</style>
+</head>
+<body>
+<div class="glow"></div>
+<main>
+  <nav>
+    <div class="brand"><img src="icon.png" alt="">MacFace</div>
+    <div class="lang" role="group" aria-label="Language">
+      <button id="en" class="on" onclick="setLang('en')">EN</button>
+      <button id="th" onclick="setLang('th')">ไทย</button>
+    </div>
+  </nav>
+
+  <header>
+    <img src="icon.png" alt="MacFace icon">
+    <h1 data-en>Look at your Mac.<br><span>It unlocks.</span></h1>
+    <h1 data-th>มองหน้าจอ<br><span>ปลดล็อกทันที</span></h1>
+    <p class="lead" data-en>Face unlock for your Mac with the built-in camera. No typing, no reaching for Touch ID. Everything runs on-device, and the unlock animation lives in your notch.</p>
+    <p class="lead" data-th>ปลดล็อก Mac ด้วยใบหน้าผ่านกล้องในเครื่อง ไม่ต้องพิมพ์รหัส ไม่ต้องแตะ Touch ID ทำงานในเครื่องทั้งหมด พร้อมแอนิเมชันที่รอยบากหน้าจอ</p>
+    <a class="cta" href="https://github.com/AImunich20/MacFace-releases/releases/latest/download/MacFace.dmg">
+      <span data-en>Download for Mac</span><span data-th>ดาวน์โหลดสำหรับ Mac</span>
+    </a>
+    <p class="small"><span data-en>Free · macOS 15 Sequoia or later · Apple silicon &amp; Intel · updates itself</span><span data-th>ฟรี · macOS 15 ขึ้นไป · Apple silicon และ Intel · อัปเดตอัตโนมัติ</span>
+      · <a href="https://github.com/AImunich20/MacFace-releases/releases"><span data-en>All versions</span><span data-th>ทุกเวอร์ชัน</span></a></p>
+  </header>
+
+  <section class="warn">
+    <h3 data-en>Not as secure as Face ID or Touch ID</h3><h3 data-th>ไม่ปลอดภัยเท่า Face ID หรือ Touch ID</h3>
+    <ul data-en>
+      <li>A Mac webcam sees a flat 2D image, with no depth sensor.</li>
+      <li>It stops printed photos and phone screens reasonably well (strict liveness on), but not reliably a video of you.</li>
+      <li>MacFace unlocks by typing your stored password on the lock screen. It is a convenience, not a security upgrade.</li>
+    </ul>
+    <ul data-th>
+      <li>กล้อง Mac เห็นภาพ 2 มิติ ไม่มีเซนเซอร์วัดความลึก</li>
+      <li>กันรูปที่พิมพ์และรูปบนจอมือถือได้ระดับหนึ่ง (เมื่อเปิด liveness แบบเข้ม) แต่กันวิดีโอของคุณได้ไม่แน่นอน</li>
+      <li>MacFace ปลดล็อกโดยพิมพ์รหัสผ่านที่เก็บไว้ให้บนหน้าจอล็อก ช่วยให้สะดวกขึ้น ไม่ได้ปลอดภัยขึ้น</li>
+    </ul>
+  </section>
+
+  <section class="grid">
+    <div class="card"><div class="icon">◉</div><h3 data-en>On-device recognition</h3><h3 data-th>จดจำใบหน้าในเครื่อง</h3>
+      <p data-en>Vision and Core ML (ArcFace). No server, no upload.</p><p data-th>ใช้ Vision และ Core ML (ArcFace) ไม่มีเซิร์ฟเวอร์ ไม่อัปโหลด</p></div>
+    <div class="card"><div class="icon">⌁</div><h3 data-en>Liveness checks</h3><h3 data-th>ตรวจว่าเป็นคนจริง</h3>
+      <p data-en>Geometry and glare cues to tell a face from a photo.</p><p data-th>ใช้รูปทรงใบหน้าและแสงสะท้อนแยกใบหน้าจริงออกจากรูปถ่าย</p></div>
+    <div class="card"><div class="icon">⬭</div><h3 data-en>Lives in the notch</h3><h3 data-th>อยู่ที่รอยบาก</h3>
+      <p data-en>Fluid, Dynamic Island-style unlock animations.</p><p data-th>แอนิเมชันปลดล็อกลื่นไหลแบบ Dynamic Island</p></div>
+    <div class="card"><div class="icon">🔒︎</div><h3 data-en>Encrypted at rest</h3><h3 data-th>เข้ารหัสในเครื่อง</h3>
+      <p data-en>Face data and password are encrypted, gated by Touch ID.</p><p data-th>ข้อมูลใบหน้าและรหัสผ่านถูกเข้ารหัส ปลดได้ด้วย Touch ID</p></div>
+  </section>
+
+  <h2 data-en>Install</h2><h2 data-th>วิธีติดตั้ง</h2>
+  <ol data-en>
+    <li>Open <b>MacFace.dmg</b> and drag <b>MacFace</b> into <b>Applications</b>.</li>
+    <li>If macOS says it can't be opened: <b>System Settings → Privacy &amp; Security → Open Anyway</b> (once only).</li>
+    <li>Follow the setup: allow <b>Camera</b> and <b>Accessibility</b>, enroll your face, then enter your Mac password.</li>
+  </ol>
+  <ol data-th>
+    <li>เปิด <b>MacFace.dmg</b> แล้วลาก <b>MacFace</b> ไปไว้ใน <b>Applications</b></li>
+    <li>ถ้า macOS แจ้งว่าเปิดไม่ได้: ไปที่ <b>System Settings → Privacy &amp; Security → Open Anyway</b> (ทำครั้งเดียว)</li>
+    <li>ทำตามขั้นตอนตั้งค่า: อนุญาต <b>Camera</b> และ <b>Accessibility</b> ลงทะเบียนใบหน้า แล้วใส่รหัสผ่าน Mac</li>
+  </ol>
+
+  <footer>
+    <span data-en>Your face data never leaves your Mac. Based on glance by Jonathan Zhou (MIT).</span><span data-th>ข้อมูลใบหน้าไม่ออกจากเครื่อง · พัฒนาต่อจาก glance โดย Jonathan Zhou (MIT)</span>
+    <a href="https://github.com/AImunich20/MacFace-releases/releases">Release notes</a>
+  </footer>
+</main>
+<script>
+  function setLang(lang) {
+    document.documentElement.lang = lang;
+    for (const id of ['en', 'th']) document.getElementById(id).classList.toggle('on', id === lang);
+    try { localStorage.setItem('lang', lang); } catch (e) {}
+  }
+  let saved = null;
+  try { saved = localStorage.getItem('lang'); } catch (e) {}
+  setLang(saved || ((navigator.language || '').startsWith('th') ? 'th' : 'en'));
+</script>
+</body>
+</html>
